@@ -18,11 +18,11 @@ Clone the repository to your local machine:
 git clone https://github.com/your-username/rc4-encryption-decryption.git
 cd rc4-encryption-decryption
 
-License
+## License
 This project is licensed under the MIT License. See the LICENSE file for details.
 
-Contributing
+## Contributing
 Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
 
-Contact
+## Contact
 For any questions or suggestions, please open an issue on this repository.

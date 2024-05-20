@@ -17,6 +17,7 @@ Clone the repository to your local machine:
 ```bash
 git clone https://github.com/your-username/rc4-encryption-decryption.git
 cd rc4-encryption-decryption
+```
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.

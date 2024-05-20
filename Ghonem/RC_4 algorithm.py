@@ -1,8 +1,8 @@
 def read_input_file(filename):
     with open(filename, 'r') as file:
         key = file.readline().strip()
-        plaintext = file.readline().strip()
-    return key, plaintext
+        data = file.readline().strip()
+    return key, data
 
 def write_output_file(filename, data):
     with open(filename, 'w') as file:
@@ -47,18 +47,39 @@ def to_byte_array(data):
         raise TypeError("Input must be a string or byte array")
 
 # Main function to read from file, encrypt, and write to file
-def main(input_file, output_file):
-    key, plaintext = read_input_file(input_file)
+def main(input_file, output_file, mode='encrypt'):
+    key, data = read_input_file(input_file)
     key_bytes = to_byte_array(key)
-    plaintext_bytes = to_byte_array(plaintext)
     
-    ciphertext_bytes = rc4(key_bytes, plaintext_bytes)
-    ciphertext = ciphertext_bytes.hex()  # Convert to hex for readable text file output
+    if mode == 'encrypt':
+        data_bytes = to_byte_array(data)
+        result_bytes = rc4(key_bytes, data_bytes)
+        result = result_bytes.hex()  # Convert to hex for readable text file output
+
+    # The same keystream is XORed with the ciphertext to recover the plaintext during decryption.
+    elif mode == 'decrypt':
+        try:
+            data_bytes = bytearray.fromhex(data)
+        except ValueError as e:
+            raise ValueError(f"Error decoding hex data: {e}")
+        
+        result_bytes = rc4(key_bytes, data_bytes)
+        try:
+            result = result_bytes.decode('utf-8')  # Decode to string for readable text file output
+        except UnicodeDecodeError as e:
+            raise ValueError(f"Error decoding bytes to string: {e}")
     
-    write_output_file(output_file, ciphertext)
+    write_output_file(output_file, result)
 
 # Example usage
-input_file = 'input.txt'
-output_file = 'output.txt'
-main(input_file, output_file)
-print("Encryption completed. Check the output file for the ciphertext.")
+if __name__ == "__main__":
+    input_file = 'input.txt'
+    output_file = 'output.txt'
+
+    # Encrypt
+    # main(input_file, output_file, mode='encrypt')
+    # print("Encryption completed. Check the output file for the ciphertext.")
+
+    # Decrypt (assumes 'input.txt' contains the key and hex-encoded ciphertext)
+    main(input_file, output_file, mode='decrypt')
+    print("Decryption completed. Check the output file for the plaintext.")
